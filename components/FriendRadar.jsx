@@ -155,10 +155,11 @@ export function FriendRadar({ userLocation, userId }) {
       .filter(s => s.authorId !== userId) // Hide self signal from radar
       .map(signal => {
         const fuzzed = fuzzLocation(signal.lat, signal.lng)
-        const color = signal.authorId === userId 
-            ? "#ef5f1f" 
-            : signal.isFriend 
-              ? getVibeConfig(signal.vibe).hex 
+        // Use a distinct high-contrast color for friends so they stand out
+        const color = signal.authorId === userId
+            ? "#ef5f1f"
+            : signal.isFriend
+              ? "#22c55e" // bright green for friends (overrides vibe hex to improve visibility)
               : "#0ea5e9"
         const distKm = haversineKm(userLocation.lat, userLocation.lng, signal.lat, signal.lng)
         return { ...signal, fuzzed, color, distKm, distText: formatDist(distKm), walkMin: walkingMinutes(distKm) }
@@ -255,12 +256,12 @@ export function FriendRadar({ userLocation, userId }) {
           </div>
           
           <div className="glass-strong hidden sm:flex items-center gap-2 rounded-2xl px-4 py-3">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
-            </span>
-            <span className="text-xs font-semibold text-emerald-300">Live</span>
-          </div>
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-violet-400 opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-violet-400" />
+              </span>
+              <span className="text-xs font-semibold text-violet-300">Live</span>
+            </div>
         </div>
 
         {/* Quick Chips */}
@@ -391,7 +392,7 @@ export function FriendRadar({ userLocation, userId }) {
                   <h4 className="font-bold text-white">{selectedSignal.userDisplayName}</h4>
                   <div className="flex gap-2 items-center mt-1">
                     {selectedSignal.isFriend ? (
-                      <span className="bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Friend</span>
+                      <span className="bg-lime-600/20 text-lime-300 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Friend</span>
                     ) : (
                       <span className="bg-blue-500/20 text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Discover</span>
                     )}
